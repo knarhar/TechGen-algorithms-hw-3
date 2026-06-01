@@ -64,6 +64,77 @@
         #endregion TASK 1
 
 
+        #region TASK 2
+
+        // Print utility
+
+        static void Print(int[,] arr)
+        {
+            int rows = arr.GetLength(0);
+            int cols = arr.GetLength(1);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    Console.Write(arr[i, j] + " ");
+                }
+
+                Console.WriteLine();
+            }
+        }
+
+
+        // -------------------------- Recursive Method ----------------------------
+
+        public static void FillArray(int[,] arr, (int x, int y) point, int newValue)
+        {
+            int oldValue = arr[point.x, point.y];
+
+            if (oldValue == newValue)
+            {
+                return;
+            }
+
+            FillRecursive(arr, point, oldValue, newValue);
+        }
+
+        private static void FillRecursive(
+            int[,] arr,
+            (int x, int y) point,
+            int oldValue,
+            int newValue
+        )
+        {
+            int rows = arr.GetLength(0);
+            int cols = arr.GetLength(1);
+
+            if (point.x < 0 || point.x >= rows ||
+                point.y < 0 || point.y >= cols)
+            {
+                return;
+            }
+
+            if (arr[point.x, point.y] != oldValue)
+            {
+                return;
+            }
+
+            arr[point.x, point.y] = newValue;
+
+            FillRecursive(arr, (point.x - 1, point.y), oldValue, newValue); // top
+            FillRecursive(arr, (point.x + 1, point.y), oldValue, newValue); // bottom
+            FillRecursive(arr, (point.x, point.y - 1), oldValue, newValue); // left col
+            FillRecursive(arr, (point.x, point.y + 1), oldValue, newValue); // right col
+        }
+
+        // -----------------------------------------------------------------
+
+        #endregion TASK 2
+
+
+
+
         static void Main()
         {
             // --------- Test Cases for Task 1 ---------
@@ -77,6 +148,28 @@
             Console.WriteLine(CheckBraces("([)]"));
             Console.WriteLine(CheckBraces("{[()()]}"));
             Console.WriteLine(CheckBraces("((("));
+            Console.WriteLine();
+
+            // --------- Test Case for Task 2 ---------
+            int[,] arr = {
+                {1, 1, 1, 0, 0, 2, 2, 2},
+                {1, 5, 5, 0, 0, 2, 3, 3},
+                {1, 5, 5, 5, 0, 2, 3, 3},
+                {0, 5, 5, 5, 0, 2, 2, 2},
+                {0, 0, 0, 0, 0, 4, 4, 4},
+                {7, 7, 0, 8, 8, 4, 6, 6},
+                {7, 7, 0, 8, 8, 4, 6, 6},
+                {7, 7, 0, 0, 0, 4, 6, 6}
+            };
+
+            Console.WriteLine("Before:");
+            Print(arr);
+
+            // X is at row=2, col=2
+            FillArray(arr, (2, 2), 9);
+
+            Console.WriteLine("\nAfter:");
+            Print(arr);
         }
     }
 }
