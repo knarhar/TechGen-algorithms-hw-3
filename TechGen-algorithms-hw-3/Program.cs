@@ -128,11 +128,58 @@
             FillRecursive(arr, (point.x, point.y + 1), oldValue, newValue); // right col
         }
 
-        // -----------------------------------------------------------------
+        // -----------------------------------------------------------------------
+
+        // ------------------------- Iterative Method ----------------------------
+
+        public static void FillArrayIterative(int[,] arr, (int x, int y) point, int newVal)
+        {
+            int rows = arr.GetLength(0); 
+            int cols = arr.GetLength(1);
+
+            int oldVal = arr[point.x, point.y];
+
+            if (oldVal == newVal)
+            {
+                return ;
+            }
+
+            // getting the cells (maximum cell count = rows * cols)
+            (int x, int y)[] cells = new (int x, int y)[rows * cols];
+            int top = -1;
+
+            cells[++top] = point; // starting from given point
+
+            while(top >= 0)
+            {
+                (int x, int y) p = cells[top--];
+
+                if (p.x < 0 || p.x >= rows ||
+                    p.y < 0 || p.y >= cols)
+                {
+                    continue;
+                }
+
+                if (arr[p.x, p.y] != oldVal)
+                {
+                    continue;
+                }
+
+                arr[p.x, p.y] = newVal;
+
+                // push to cells the starting cell's neighbors
+                cells[++top] = (p.x - 1, p.y);
+                cells[++top] = (p.x + 1, p.y);
+                cells[++top] = (p.x, p.y - 1);
+                cells[++top] = (p.x, p.y + 1);
+            }
+        }
+
+
+
+        // -----------------------------------------------------------------------
 
         #endregion TASK 2
-
-
 
 
         static void Main()
@@ -166,10 +213,11 @@
             Print(arr);
 
             // X is at row=2, col=2
-            FillArray(arr, (2, 2), 9);
-
+            //FillArray(arr, (2, 2), 9);
+            FillArrayIterative(arr, (2, 2), 9);
             Console.WriteLine("\nAfter:");
             Print(arr);
+
         }
     }
 }
