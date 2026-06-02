@@ -178,6 +178,48 @@
 
 
         // -----------------------------------------------------------------------
+        // ---------------------- BFS and Queue algorithm ------------------------
+
+        public static void FillArrBFS(int[,] arr, (int x, int y) point, int newValue)
+        {
+            int oldValue = arr[point.x, point.y];
+
+            if (oldValue == newValue)
+            {
+                return;
+            }
+
+            int rows = arr.GetLength(0);
+            int cols = arr.GetLength(1);
+
+            // use queue logic, first in first out
+            (int x, int y)[] queue = new (int x, int y)[rows * cols];
+            int head = 0, tail = 0;
+
+            queue[tail++] = point;
+
+            while (head < tail)
+            {
+                (int x, int y) p = queue[head++];
+
+                if (p.y >= cols || p.x >= rows || p.x < 0 || p.y < 0)
+                    continue;
+
+                if (arr[p.x, p.y] != oldValue)
+                {
+                    continue;
+                }
+
+                arr[p.x, p.y] = newValue;
+
+                queue[tail++] = (p.x - 1, p.y);
+                queue[tail++] = (p.x + 1, p.y);
+                queue[tail++] = (p.x, p.y - 1);
+                queue[tail++] = (p.x, p.y + 1);
+            }
+
+        }
+
 
         #endregion TASK 2
 
@@ -214,7 +256,8 @@
 
             // X is at row=2, col=2
             //FillArray(arr, (2, 2), 9);
-            FillArrayIterative(arr, (2, 2), 9);
+            //FillArrayIterative(arr, (2, 2), 9);
+            FillArrBFS(arr, (2, 2), 9);
             Console.WriteLine("\nAfter:");
             Print(arr);
 
